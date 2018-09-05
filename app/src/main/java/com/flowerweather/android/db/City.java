@@ -7,9 +7,7 @@ import java.util.Date;
 public class City extends DataSupport{
     //主键ID
     private int id;
-    //地区/城市名称
-    private String location;
-    //该地区／城市的上级城市
+    //该地区／城市的上级城市（查天气取这个）
     private String parentArea;
     //该地区／城市所属行政区域
     private String adminArea;
@@ -32,14 +30,6 @@ public class City extends DataSupport{
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public String getParentArea() {
@@ -105,4 +95,6 @@ public class City extends DataSupport{
     public void setSfmr(String sfmr) {
         Sfmr = sfmr;
     }
+
+
 }
