@@ -2,6 +2,8 @@ package com.flowerweather.android.db;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.Date;
+
 public class City extends DataSupport{
     //主键ID
     private int id;
@@ -19,6 +21,10 @@ public class City extends DataSupport{
     private String lon;
     //该地区／城市所在时区
     private String tz;
+    //最后更新天气的时间
+    private Date lastUpdate;
+    //是否默认(1是/0否)
+    private String Sfmr;
 
     public int getId() {
         return id;
@@ -82,5 +88,21 @@ public class City extends DataSupport{
 
     public void setTz(String tz) {
         this.tz = tz;
+    }
+
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    public String getSfmr() {
+        return Sfmr;
+    }
+
+    public void setSfmr(String sfmr) {
+        Sfmr = sfmr;
     }
 }

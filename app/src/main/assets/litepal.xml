@@ -6,6 +6,11 @@
 
     <list>
         <mapping class="com.flowerweather.android.db.City"/>
+        <mapping class="com.flowerweather.android.db.Daily"/>
+        <mapping class="com.flowerweather.android.db.Day"/>
+        <mapping class="com.flowerweather.android.db.MyCity"/>
+        <mapping class="com.flowerweather.android.db.Now"/>
+        <mapping class="com.flowerweather.android.db.Suggestion"/>
     </list>
 
 </litepal>
