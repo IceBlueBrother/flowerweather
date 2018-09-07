@@ -1,5 +1,6 @@
 package com.flowerweather.android.uicustomviews;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -26,7 +27,7 @@ public class AddCityEditViewLayout extends LinearLayout{
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "弹窗看看", Toast.LENGTH_SHORT).show();
-                RecyclerView DefaultCity= (RecyclerView) findViewById(R.id.default_city);
+                RecyclerView DefaultCity= (RecyclerView) ((Activity) context).findViewById(R.id.default_city);
                 DefaultCity.setVisibility(View.GONE);
             }
         });
