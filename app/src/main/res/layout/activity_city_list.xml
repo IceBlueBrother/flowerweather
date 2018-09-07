@@ -5,7 +5,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/main">
+    android:background="@mipmap/citylist">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -17,43 +17,47 @@
             android:layout_height="wrap_content"
             android:background="#00000000">
 
-            <com.flowerweather.android.uicustomviews.TitleLayout
-                android:id="@+id/title"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fitsSystemWindows="true"
+                android:gravity="left"
+                android:layout_margin="10dp"
+                android:background="#00000000"
+                android:text="城市列表"
+                android:textColor="#000000"
+                android:textSize="26sp"
                 app:layout_scrollFlags="scroll|enterAlways|snap"/>
 
         </android.support.design.widget.AppBarLayout>
 
-        <android.support.v4.widget.NestedScrollView
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <LinearLayout
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/city_list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="match_parent" />
 
-                <TextView
-                    android:id="@+id/weather_content_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"/>
+        </android.support.v4.widget.SwipeRefreshLayout>
 
-            </LinearLayout>
-
-        </android.support.v4.widget.NestedScrollView>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/add_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="26dp"
+            android:src="@drawable/nav_icon"
+            app:fabSize="auto"
+            app:elevation="18dp"
+            app:borderWidth="0dp"
+            app:backgroundTint="#808080"
+            app:rippleColor="#000000"
+            app:pressedTranslationZ="8dp"
+            app:useCompatPadding="false"/>
 
     </android.support.design.widget.CoordinatorLayout>
-
-    <!--<android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:menu="@menu/nav_menu"
-        app:headerLayout="@layout/nav_header"/>-->
 
 </android.support.v4.widget.DrawerLayout>

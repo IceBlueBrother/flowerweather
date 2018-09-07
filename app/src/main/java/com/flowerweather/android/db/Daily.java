@@ -9,8 +9,6 @@ public class Daily extends DataSupport{
     private int id;
     //最后更新时间
     private String lastUpdate;
-    //逐日天气（今天和未来四天）
-    private List<Day> date;
     //城市主表Id
     private int CityId;
 
@@ -20,14 +18,6 @@ public class Daily extends DataSupport{
 
     public void setLastUpdate(String lastUpdate) {
         this.lastUpdate = lastUpdate;
-    }
-
-    public List<Day> getDate() {
-        return date;
-    }
-
-    public void setDate(List<Day> date) {
-        this.date = date;
     }
 
     public int getCityId() {
