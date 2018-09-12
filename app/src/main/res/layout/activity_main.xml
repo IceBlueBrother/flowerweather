@@ -40,6 +40,7 @@
                     android:id="@+id/weather_content_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="#66ffffff"
                     android:layout_margin="10dp"/>
 
             </LinearLayout>

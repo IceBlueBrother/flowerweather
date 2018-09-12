@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="left"
                 android:layout_margin="10dp"
-                android:background="#00000000"
+                android:background="#66ffffff"
                 android:text="城市列表"
                 android:textColor="#000000"
                 android:textSize="26sp"
@@ -53,8 +53,8 @@
             app:fabSize="auto"
             app:elevation="18dp"
             app:borderWidth="0dp"
-            app:backgroundTint="#808080"
-            app:rippleColor="#000000"
+            app:backgroundTint="#5498E8"
+            app:rippleColor="#4E8BD6"
             app:pressedTranslationZ="8dp"
             app:useCompatPadding="false"/>
 
