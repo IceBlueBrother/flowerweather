@@ -16,6 +16,7 @@
         android:paddingTop="3dp"
         android:paddingBottom="3dp"
         android:paddingLeft="15dp"
+        android:maxLines="1"
         android:hint="搜索城市（支持模糊查询）"/>
 
     <Button

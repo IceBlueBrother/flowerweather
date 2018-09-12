@@ -16,6 +16,10 @@ import android.widget.Toast;
 
 import com.flowerweather.android.AddCityActivity;
 import com.flowerweather.android.R;
+import com.flowerweather.android.gson.CitySearch;
+import com.flowerweather.android.status.AddressStatus;
+import com.flowerweather.android.util.HttpUtil;
+import com.flowerweather.android.util.Utility;
 
 public class AddCityEditViewLayout extends LinearLayout{
 
@@ -28,7 +32,7 @@ public class AddCityEditViewLayout extends LinearLayout{
         LayoutInflater.from(context).inflate(R.layout.add_city_editview,this);
 
         final EditText EditText= (EditText) findViewById(R.id.edit_view);
-        Button SearchCity= (Button) findViewById(R.id.search_city);
+        final Button SearchCity= (Button) findViewById(R.id.search_city);
         SearchCity.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -36,33 +40,45 @@ public class AddCityEditViewLayout extends LinearLayout{
                 String editText=EditText.getText().toString();
                 if (editText==null||"".equals(editText)){
                     AlertDialog.Builder dialog=new AlertDialog.Builder(context);
-                    //设置标题
-//
                     //设置内容
                     dialog.setMessage("请先输入关键字");
                     //可否取消
                     dialog.setCancelable(false);
                     //设置确定按钮点击事件
-                    dialog.setPositiveButton("OK",new DialogInterface.
+                    dialog.setPositiveButton("确认",new DialogInterface.
                             OnClickListener(){
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                         }
                     });
-//                    //设置取消按钮点击事件
-//                    dialog.setNegativeButton("Calcel",new DialogInterface.
-//                            OnClickListener(){
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                        }
-//                    });
                     //显示对话框
                     dialog.show();
                     return;
+                }else{
+                    //输入内容不为空，则进行查询
+                    Utility.queryFromServer(context,AddressStatus.getCityAdd+editText,"SearchCity");
+
+                    if (Utility.citySearch!=null&&!"".equals(Utility.citySearch)){
+                        //访问查询，获取结果列表
+                        CitySearch citySearch=Utility.citySearch;
+                        //判断查询结果
+                        if("ok".equals(citySearch.getStatus())){
+                            //有数据，隐藏RecyclerView
+                            Toast.makeText(context, citySearch.toString(), Toast.LENGTH_SHORT).show();
+                            RecyclerView DefaultCity= (RecyclerView) ((Activity) context).findViewById(R.id.default_city);
+                            DefaultCity.setVisibility(View.GONE);
+                            //展示结果列表
+                            //获取用户点击事件
+                            //获取城市
+                            //先查询数据库是否存在该城市
+                            //将该城市添加到用户城市列表
+                            //关闭Activity
+                            //跳转到MainActivity
+                            //剩下的等MainActivity完成再继续（假装一下）
+                            return;
+                        }
+                    }
                 }
-                Toast.makeText(context, "弹窗看看", Toast.LENGTH_SHORT).show();
-                RecyclerView DefaultCity= (RecyclerView) ((Activity) context).findViewById(R.id.default_city);
-                DefaultCity.setVisibility(View.GONE);
             }
         });
     }
