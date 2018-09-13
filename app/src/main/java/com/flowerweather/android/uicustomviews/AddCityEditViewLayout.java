@@ -9,17 +9,23 @@ import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.flowerweather.android.AddCityActivity;
 import com.flowerweather.android.R;
 import com.flowerweather.android.gson.CitySearch;
+import com.flowerweather.android.gson.Citybasic;
 import com.flowerweather.android.status.AddressStatus;
 import com.flowerweather.android.util.HttpUtil;
 import com.flowerweather.android.util.Utility;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddCityEditViewLayout extends LinearLayout{
 
@@ -56,7 +62,7 @@ public class AddCityEditViewLayout extends LinearLayout{
                     return;
                 }else{
                     //输入内容不为空，则进行查询
-                    Utility.queryFromServer(context,AddressStatus.getCityAdd+editText,"SearchCity");
+                    Utility.queryFromServer(context,AddressStatus.getCityAdd+editText+"&group=cn&number=20","SearchCity");
 
                     if (Utility.citySearch!=null&&!"".equals(Utility.citySearch)){
                         //访问查询，获取结果列表
@@ -65,9 +71,20 @@ public class AddCityEditViewLayout extends LinearLayout{
                         if("ok".equals(citySearch.getStatus())){
                             //有数据，隐藏RecyclerView
                             Toast.makeText(context, citySearch.toString(), Toast.LENGTH_SHORT).show();
-                            RecyclerView DefaultCity= (RecyclerView) ((Activity) context).findViewById(R.id.default_city);
+                            RecyclerView DefaultCity= (RecyclerView) ((Activity)context).findViewById(R.id.default_city);
                             DefaultCity.setVisibility(View.GONE);
+                            //将listView展示出来
+                            ListView listView= (ListView) ((Activity)context).findViewById(R.id.choice_city);
+                            listView.setVisibility(View.VISIBLE);
+                            //获取需要展示的数据
+                            List<String> dataList=new ArrayList<>();
+                            for (Citybasic b:citySearch.getBasic()){
+                                dataList.add(b.getLocation()+","+b.getParent_city()+","+b.getAdmin_area());
+                            }
                             //展示结果列表
+                            ArrayAdapter<String> adapter=new ArrayAdapter<>(context,
+                                    android.R.layout.simple_list_item_1,dataList);
+                            listView.setAdapter(adapter);
                             //获取用户点击事件
                             //获取城市
                             //先查询数据库是否存在该城市
