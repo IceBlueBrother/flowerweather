@@ -21,5 +21,7 @@ public class AddCityActivity extends AppCompatActivity {
         AddCityRecyclerView.setLayoutManager(layoutManager);
         adapter=new AddCityAdapter();
         AddCityRecyclerView.setAdapter(adapter);
+
+
     }
 }

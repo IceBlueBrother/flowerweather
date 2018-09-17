@@ -94,9 +94,11 @@ public class AddCityEditViewLayout extends LinearLayout{
                                     //获取城市
                                     //先查询数据库是否存在该城市
                                     //将该城市添加到用户城市列表
-                                    ZqzbUtil.FBCity(context,getC[1]);
+                                    boolean f=ZqzbUtil.FBCity(context,getC[1]);
                                     //关闭Activity
-                                    ((Activity) context).finish();
+                                    if (f){
+                                        ((Activity) context).finish();
+                                    }
                                 }
                             });
                             //跳转到MainActivity

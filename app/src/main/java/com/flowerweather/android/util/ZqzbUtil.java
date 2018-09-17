@@ -17,29 +17,24 @@ public class ZqzbUtil {
     /**
      * 页面三点击城市时的操作
      */
-    public static void FBCity(Context context,String getC){
-        ProgressDialogUtil.showProgressDialog(context);
-
+    public static boolean FBCity(Context context,String getC){
         List<City> dataCityList;
         List<MyCity> dataMyCityList;
 
         Citybasic city=new Citybasic();
         City c=new City();
-        Boolean flag=true;
-        int Retry=0;
 
-        while (flag){
             Utility.queryFromServer(context,AddressStatus.getCityAdd+getC+"&group=cn&number=1&mode=equal","SearchCity");
             if (Utility.citySearch!=null&&!"".equals(Utility.citySearch)){
                 city=Utility.citySearch.getBasic().get(0);
                 if (getC.equals(city.getParent_city())&&city.getLocation().equals(city.getParent_city())){
-                    flag=false;
+
+                }else {
+                    return false;
                 }
-                if (Retry>9){
-                    return;
-                }
+            }else {
+                return false;
             }
-        }
 
         //查询该城市是否存在
         dataCityList= DataSupport.where("parentArea=?",getC).find(City.class);
@@ -66,7 +61,7 @@ public class ZqzbUtil {
             myCity.save();
         }
 
-        ProgressDialogUtil.closeProgressDialog();
+        return true;
     }
 
 

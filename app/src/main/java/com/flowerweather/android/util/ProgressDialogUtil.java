@@ -10,11 +10,9 @@ public class ProgressDialogUtil {
      * 显示进度对话框
      */
     public static void showProgressDialog(Context context){
-        if (progressDialog==null){
-            progressDialog=new ProgressDialog(context);
-            progressDialog.setMessage("正在获取信息……");
-            progressDialog.setCanceledOnTouchOutside(false);
-        }
+        progressDialog=new ProgressDialog(context);
+        progressDialog.setMessage("正在加载中……");
+        progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
     }
 

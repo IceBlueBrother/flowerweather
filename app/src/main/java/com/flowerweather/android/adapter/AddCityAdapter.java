@@ -1,5 +1,6 @@
 package com.flowerweather.android.adapter;
 
+import android.app.Activity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.flowerweather.android.R;
+import com.flowerweather.android.util.Utility;
+import com.flowerweather.android.util.ZqzbUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +33,7 @@ public class AddCityAdapter extends RecyclerView.Adapter<AddCityAdapter.ViewHold
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.add_city_item,parent,false);
         final ViewHolder holder=new ViewHolder(view);
         holder.cardView.setOnClickListener(new View.OnClickListener(){
@@ -39,6 +42,10 @@ public class AddCityAdapter extends RecyclerView.Adapter<AddCityAdapter.ViewHold
                 int position=holder.getAdapterPosition();
                 String city=mDefaultCitys[position];
                 //正在这里处理逻辑
+                boolean f=ZqzbUtil.FBCity(parent.getContext(),city);
+                if (f){
+                    ((Activity)parent.getContext()).finish();
+                }
             }
         });
         return holder;

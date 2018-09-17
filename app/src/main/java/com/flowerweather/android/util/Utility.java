@@ -32,10 +32,12 @@ public class Utility {
      * @param address
      * @return
      */
-    public static void queryFromServer(final Context context, String address,final String type){
+    public static void queryFromServer(final Context context, final String address, final String type){
         HttpUtil.sendOkHttpRequest(address, new Callback() {
+            private static final String TAG = "Utility";
             @Override
             public void onFailure(Call call, final IOException e) {
+                Log.d(TAG, "onFailure: "+address);
                 ((Activity)context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -60,10 +62,14 @@ public class Utility {
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 final String responseText= response.body().string();
+                Log.d(TAG, "onResponse:"+address);
+                Log.d(TAG, "onResponse: "+responseText);
                 ((Activity)context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        Log.d(TAG, "run: ...");
                         if ("SearchCity".equals(type)){
+                            Log.d(TAG, "run: "+SearchCity(responseText));
                             citySearch = SearchCity(responseText);
                         }
                     }
@@ -83,10 +89,13 @@ public class Utility {
             JSONObject jsonObject=new JSONObject(response);
             JSONArray jsonArray=jsonObject.getJSONArray("HeWeather6");
             String cityContent=jsonArray.getJSONObject(0).toString();
+            Log.d("CitySearch", "SearchCity: "+cityContent);
             return new Gson().fromJson(cityContent,CitySearch.class);
         } catch (JSONException e) {
+            Log.d("CitySearch", "SearchCity: "+e.getMessage());
             e.printStackTrace();
         }
+        Log.d("CitySearch", "SearchCity: null");
         return null;
     }
 
