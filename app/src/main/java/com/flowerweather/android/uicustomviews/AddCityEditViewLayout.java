@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +24,7 @@ import com.flowerweather.android.gson.Citybasic;
 import com.flowerweather.android.status.AddressStatus;
 import com.flowerweather.android.util.HttpUtil;
 import com.flowerweather.android.util.Utility;
+import com.flowerweather.android.util.ZqzbUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,14 +72,13 @@ public class AddCityEditViewLayout extends LinearLayout{
                         //判断查询结果
                         if("ok".equals(citySearch.getStatus())){
                             //有数据，隐藏RecyclerView
-                            Toast.makeText(context, citySearch.toString(), Toast.LENGTH_SHORT).show();
                             RecyclerView DefaultCity= (RecyclerView) ((Activity)context).findViewById(R.id.default_city);
                             DefaultCity.setVisibility(View.GONE);
                             //将listView展示出来
                             ListView listView= (ListView) ((Activity)context).findViewById(R.id.choice_city);
                             listView.setVisibility(View.VISIBLE);
                             //获取需要展示的数据
-                            List<String> dataList=new ArrayList<>();
+                            final List<String> dataList=new ArrayList<>();
                             for (Citybasic b:citySearch.getBasic()){
                                 dataList.add(b.getLocation()+","+b.getParent_city()+","+b.getAdmin_area());
                             }
@@ -86,10 +87,18 @@ public class AddCityEditViewLayout extends LinearLayout{
                                     android.R.layout.simple_list_item_1,dataList);
                             listView.setAdapter(adapter);
                             //获取用户点击事件
-                            //获取城市
-                            //先查询数据库是否存在该城市
-                            //将该城市添加到用户城市列表
-                            //关闭Activity
+                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    String[] getC=dataList.get(position).split(",");
+                                    //获取城市
+                                    //先查询数据库是否存在该城市
+                                    //将该城市添加到用户城市列表
+                                    ZqzbUtil.FBCity(context,getC[1]);
+                                    //关闭Activity
+                                    ((Activity) context).finish();
+                                }
+                            });
                             //跳转到MainActivity
                             //剩下的等MainActivity完成再继续（假装一下）
                             return;
