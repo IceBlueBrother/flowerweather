@@ -41,7 +41,8 @@
                     android:layout_margin="0dp"
                     android:layout_gravity="clip_vertical"
                     android:gravity="right"
-                    android:background="@drawable/recovernobtn2"/>
+                    android:background="@drawable/recovernobtn2"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 

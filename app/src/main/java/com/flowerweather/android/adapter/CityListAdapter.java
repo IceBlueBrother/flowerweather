@@ -22,6 +22,8 @@ import java.util.List;
 public class CityListAdapter extends RecyclerView.Adapter<CityListAdapter.ViewHolder>{
     private List<MyCity> MyCitylist;
 
+    public boolean VFlag=false;
+
     static class ViewHolder extends RecyclerView.ViewHolder{
         TextView CityListName;
         Button deleteMycity;
@@ -60,6 +62,11 @@ public class CityListAdapter extends RecyclerView.Adapter<CityListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        if (VFlag){
+            holder.deleteMycity.setVisibility(View.VISIBLE);
+        }else {
+            holder.deleteMycity.setVisibility(View.GONE);
+        }
         //通过position得到当前MyCity实例
         MyCity myCity=MyCitylist.get(position);
         //将数据设置到ViewHolder

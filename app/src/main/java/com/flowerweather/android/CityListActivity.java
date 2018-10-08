@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 
 import com.flowerweather.android.adapter.CityListAdapter;
 import com.flowerweather.android.db.MyCity;
+import com.flowerweather.android.util.ItemClickSupport;
 
 import org.litepal.crud.DataSupport;
 
@@ -23,10 +25,15 @@ public class CityListActivity extends AppCompatActivity implements View.OnClickL
 
     private List<MyCity> myCityList;
 
+    private Button recoverNoBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_list);
+
+        recoverNoBtn= (Button) findViewById(R.id.recover_NoDelBtn);
+        recoverNoBtn.setOnClickListener(this);
 
         RecyclerView CityList= (RecyclerView) findViewById(R.id.city_list);
         LinearLayoutManager manager=new LinearLayoutManager(this);
@@ -34,6 +41,16 @@ public class CityListActivity extends AppCompatActivity implements View.OnClickL
         myCityList=DataSupport.findAll(MyCity.class);
         adapter=new CityListAdapter(myCityList);
         CityList.setAdapter(adapter);
+
+        ItemClickSupport.addTo(CityList).setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
+                adapter.VFlag=true;
+                adapter.notifyDataSetChanged();
+                recoverNoBtn.setVisibility(View.VISIBLE);
+                return false;
+            }
+        });
 
         swipeRefresh= (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         //设置下拉进度条的颜色
@@ -56,6 +73,11 @@ public class CityListActivity extends AppCompatActivity implements View.OnClickL
             case R.id.add_city:
                 Intent addCityIntent=new Intent(this,AddCityActivity.class);
                 startActivity(addCityIntent);
+                break;
+            case R.id.recover_NoDelBtn:
+                adapter.VFlag=false;
+                adapter.notifyDataSetChanged();
+                recoverNoBtn.setVisibility(View.GONE);
                 break;
             default:
                 break;

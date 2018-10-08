@@ -25,7 +25,8 @@
             android:layout_width="30dp"
             android:layout_marginRight="30dp"
             android:background="@drawable/deletemycity"
-            android:layout_height="30dp"/>
+            android:layout_height="30dp"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
