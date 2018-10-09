@@ -9,15 +9,19 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.flowerweather.android.db.City;
 import com.flowerweather.android.db.MyCity;
 import com.flowerweather.android.gson.CitySearch;
+import com.flowerweather.android.gson.Citybasic;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.Call;
@@ -97,6 +101,136 @@ public class Utility {
         }
         Log.d("CitySearch", "SearchCity: null");
         return null;
+    }
+
+    /**
+     * 获取当前所在城市，并添加/更新默认城市
+     *
+     * @param address
+     * @return
+     */
+    public static void queryMyCityNow(final Context context,final String address){
+        HttpUtil.sendOkHttpRequest(address, new Callback() {
+            private static final String TAG = "Utility";
+            @Override
+            public void onFailure(Call call, final IOException e) {
+                Log.d(TAG, "onFailure: "+address);
+                ((Activity)context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlertDialog.Builder dialog=new AlertDialog.Builder(context);
+                        //设置内容
+                        dialog.setMessage(e.getMessage());
+                        //可否取消
+                        dialog.setCancelable(false);
+                        //设置确定按钮点击事件
+                        dialog.setPositiveButton("确认",new DialogInterface.
+                                OnClickListener(){
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+                        //显示对话框
+                        dialog.show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                final String responseText= response.body().string();
+                Log.d(TAG, "onResponse:"+address);
+                Log.d(TAG, "onResponse: "+responseText);
+                ((Activity)context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG, "run: ...");
+                        Log.d(TAG, "run: "+SearchCity(responseText));
+                        CitySearch citySearch2 = SearchCity(responseText);
+                        if ("ok".equals(citySearch2.getStatus())){
+                            Citybasic citybasic=citySearch2.getBasic().get(0);
+
+                            //先处理City表
+                            List<City> cityList= DataSupport.where("parentArea=?",citybasic.getParent_city()).find(City.class);
+                            City c=new City();
+                            if (cityList!=null&&cityList.size()>0){
+                                c=cityList.get(0);
+                                //该城市存在
+                                if (!"1".equals(c.getSfmr())){
+                                    //用户换城市了
+                                    List<City> cityList2= DataSupport.where("Sfmr=?","1").find(City.class);
+                                    if (cityList2!=null&&cityList2.size()>0){
+                                        for (City c2:cityList2) {
+                                            c2.setSfmr("0");
+                                            c2.save();
+                                        }
+                                    }
+                                    //保存当前数据
+                                    c.setSfmr("1");
+                                    c.save();
+                                }
+                            }else {
+                                //不存在则保存
+                                List<City> cityList2= DataSupport.where("Sfmr=?","1").find(City.class);
+                                if (cityList2!=null&&cityList2.size()>0){
+                                    for (City c2:cityList2) {
+                                        c2.setSfmr("0");
+                                        c2.save();
+                                    }
+                                }
+                                //保存当前数据
+                                c.setParentArea(citybasic.getParent_city());
+                                c.setAdminArea(citybasic.getAdmin_area());
+                                c.setCnty(citybasic.getCnty());
+                                c.setCnty(citybasic.getCnty());
+                                c.setLat(citybasic.getLat());
+                                c.setLon(citybasic.getLon());
+                                c.setTz(citybasic.getTz());
+                                c.setSfmr("1");
+                                c.save();
+                            }
+
+                            //同样的操作MyCity表再重复一次
+                            List<MyCity> MycityList= DataSupport.where("City=?",citybasic.getParent_city()).find(MyCity.class);
+                            if (MycityList!=null&&MycityList.size()>0){
+                                MyCity mc=MycityList.get(0);
+                                //该城市存在
+                                if (!"1".equals(mc.getSfxz())){
+                                    //用户换城市了
+                                    List<MyCity> MycityList2= DataSupport.where("sfxz=?","1").find(MyCity.class);
+                                    if (MycityList2!=null&&MycityList2.size()>0){
+                                        for (MyCity c2:MycityList2) {
+                                            c2.setSfxz("0");
+                                            c2.save();
+                                        }
+                                    }
+                                    //保存当前数据
+                                    mc.setSfxz("1");
+                                    mc.save();
+                                }
+                            }else {
+                                //不存在则保存
+                                List<MyCity> MycityList2= DataSupport.where("sfxz=?","1").find(MyCity.class);
+                                if (MycityList2!=null&&MycityList2.size()>0){
+                                    for (MyCity c2:MycityList2) {
+                                        c2.setSfxz("0");
+                                        c2.save();
+                                    }
+                                }
+                                //保存当前数据
+                                MyCity myCity=new MyCity();
+                                myCity.setCity(c.getParentArea());
+                                myCity.setCityId(c.getId());
+                                myCity.setSfxz("1");
+                                myCity.save();
+                            }
+                        }else{
+                            ((Activity) context).finish();
+                        }
+                    }
+                });
+            }
+        });
     }
 
 }
