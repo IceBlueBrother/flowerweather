@@ -42,10 +42,7 @@ public class AddCityAdapter extends RecyclerView.Adapter<AddCityAdapter.ViewHold
                 int position=holder.getAdapterPosition();
                 String city=mDefaultCitys[position];
                 //正在这里处理逻辑
-                boolean f=ZqzbUtil.FBCity(parent.getContext(),city);
-                if (f){
-                    ((Activity)parent.getContext()).finish();
-                }
+                ZqzbUtil.FBCity(parent.getContext(),city);
             }
         });
         return holder;

@@ -36,14 +36,14 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class Utility {
-    public static CitySearch CitySearch;
     /**
      * 访问服务器，获取访问数据
      *
      * @param address
      * @return
      */
-    public static void queryFromServer(final Context context, final String address, final String type){
+    public static void queryFromServer(final Context context, final String address, final String type
+                                        ,final String getC){
         HttpUtil.sendOkHttpRequest(address, new Callback() {
             private static final String TAG = "Utility";
             @Override
@@ -110,17 +110,52 @@ public class Utility {
                                             //获取城市
                                             //先查询数据库是否存在该城市
                                             //将该城市添加到用户城市列表
-                                            boolean f=ZqzbUtil.FBCity(context,getC[1]);
-                                            //关闭Activity
-                                            if (f){
-                                                ((Activity) context).finish();
-                                            }
+                                            ZqzbUtil.FBCity(context,getC[1]);
                                         }
                                     });
                                 }
                             }
                         }else if ("SearchCityFBCity".equals(type)){
-                            CitySearch=SearchCity(responseText);
+                            List<City> dataCityList;
+                            List<MyCity> dataMyCityList;
+
+                            Citybasic city=new Citybasic();
+                            City c=new City();
+
+                            CitySearch citySearch2 = SearchCity(responseText);
+                            if (citySearch2!=null&&!"".equals(citySearch2)){
+                                city=citySearch2.getBasic().get(0);
+                                if (getC.equals(city.getParent_city())&&city.getLocation().equals(city.getParent_city())){
+
+                                }
+                            }
+
+                            //查询该城市是否存在
+                            dataCityList= DataSupport.where("parentArea=?",getC).find(City.class);
+                            if (!(dataCityList!=null&&dataCityList.size()>0)){
+                                c.setParentArea(city.getParent_city());
+                                c.setAdminArea(city.getAdmin_area());
+                                c.setCnty(city.getCnty());
+                                c.setCnty(city.getCnty());
+                                c.setLat(city.getLat());
+                                c.setLon(city.getLon());
+                                c.setTz(city.getTz());
+                                c.setSfmr("0");
+                                c.save();
+                            }else {
+                                c=dataCityList.get(0);
+                            }
+
+                            dataMyCityList=DataSupport.where("City=?",getC).find(MyCity.class);
+                            if (!(dataMyCityList!=null&&dataMyCityList.size()>0)){
+                                MyCity myCity=new MyCity();
+                                myCity.setCity(c.getParentArea());
+                                myCity.setCityId(c.getId());
+                                myCity.setSfxz("0");
+                                myCity.save();
+                            }
+
+                            ((Activity) context).finish();
                         }
                     }
                 });

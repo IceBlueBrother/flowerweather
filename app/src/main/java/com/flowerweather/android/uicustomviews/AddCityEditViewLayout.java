@@ -64,7 +64,7 @@ public class AddCityEditViewLayout extends LinearLayout{
                     return;
                 }else{
                     //输入内容不为空，则进行查询
-                    Utility.queryFromServer(context,AddressStatus.getCityAdd+editText+"&group=cn&number=20","SearchCity");
+                    Utility.queryFromServer(context,AddressStatus.getCityAdd+editText+"&group=cn&number=20","SearchCity",editText);
                 }
             }
         });
