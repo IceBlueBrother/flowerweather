@@ -62,13 +62,17 @@ public class CityListAdapter extends RecyclerView.Adapter<CityListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        //通过position得到当前MyCity实例
+        MyCity myCity=MyCitylist.get(position);
         if (VFlag){
-            holder.deleteMycity.setVisibility(View.VISIBLE);
+            if ("0".equals(myCity.getSfxz())){
+                holder.deleteMycity.setVisibility(View.VISIBLE);
+            }else{
+                holder.deleteMycity.setVisibility(View.GONE);
+            }
         }else {
             holder.deleteMycity.setVisibility(View.GONE);
         }
-        //通过position得到当前MyCity实例
-        MyCity myCity=MyCitylist.get(position);
         //将数据设置到ViewHolder
         holder.CityListName.setText(myCity.getCity());
     }
