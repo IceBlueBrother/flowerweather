@@ -65,47 +65,6 @@ public class AddCityEditViewLayout extends LinearLayout{
                 }else{
                     //输入内容不为空，则进行查询
                     Utility.queryFromServer(context,AddressStatus.getCityAdd+editText+"&group=cn&number=20","SearchCity");
-
-                    if (Utility.citySearch!=null&&!"".equals(Utility.citySearch)){
-                        //访问查询，获取结果列表
-                        CitySearch citySearch=Utility.citySearch;
-                        //判断查询结果
-                        if("ok".equals(citySearch.getStatus())){
-                            //有数据，隐藏RecyclerView
-                            RecyclerView DefaultCity= (RecyclerView) ((Activity)context).findViewById(R.id.default_city);
-                            DefaultCity.setVisibility(View.GONE);
-                            //将listView展示出来
-                            ListView listView= (ListView) ((Activity)context).findViewById(R.id.choice_city);
-                            listView.setVisibility(View.VISIBLE);
-                            //获取需要展示的数据
-                            final List<String> dataList=new ArrayList<>();
-                            for (Citybasic b:citySearch.getBasic()){
-                                dataList.add(b.getLocation()+","+b.getParent_city()+","+b.getAdmin_area());
-                            }
-                            //展示结果列表
-                            ArrayAdapter<String> adapter=new ArrayAdapter<>(context,
-                                    android.R.layout.simple_list_item_1,dataList);
-                            listView.setAdapter(adapter);
-                            //获取用户点击事件
-                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-                                @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    String[] getC=dataList.get(position).split(",");
-                                    //获取城市
-                                    //先查询数据库是否存在该城市
-                                    //将该城市添加到用户城市列表
-                                    boolean f=ZqzbUtil.FBCity(context,getC[1]);
-                                    //关闭Activity
-                                    if (f){
-                                        ((Activity) context).finish();
-                                    }
-                                }
-                            });
-                            //跳转到MainActivity
-                            //剩下的等MainActivity完成再继续（假装一下）
-                            return;
-                        }
-                    }
                 }
             }
         });

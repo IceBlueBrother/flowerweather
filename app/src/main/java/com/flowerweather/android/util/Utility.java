@@ -6,9 +6,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.flowerweather.android.R;
 import com.flowerweather.android.db.City;
 import com.flowerweather.android.db.MyCity;
 import com.flowerweather.android.gson.CitySearch;
@@ -21,6 +27,7 @@ import org.json.JSONObject;
 import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +36,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class Utility {
-    public static CitySearch citySearch;
+    public static CitySearch CitySearch;
     /**
      * 访问服务器，获取访问数据
      *
@@ -74,7 +81,46 @@ public class Utility {
                         Log.d(TAG, "run: ...");
                         if ("SearchCity".equals(type)){
                             Log.d(TAG, "run: "+SearchCity(responseText));
-                            citySearch = SearchCity(responseText);
+                            CitySearch citySearch2 = SearchCity(responseText);
+                            if (citySearch2!=null&&!"".equals(citySearch2)){
+                                //访问查询，获取结果列表
+                                CitySearch citySearch=citySearch2;
+                                //判断查询结果
+                                if("ok".equals(citySearch.getStatus())){
+                                    //有数据，隐藏RecyclerView
+                                    RecyclerView DefaultCity= (RecyclerView) ((Activity)context).findViewById(R.id.default_city);
+                                    DefaultCity.setVisibility(View.GONE);
+                                    //将listView展示出来
+                                    ListView listView= (ListView) ((Activity)context).findViewById(R.id.choice_city);
+                                    listView.setVisibility(View.VISIBLE);
+                                    //获取需要展示的数据
+                                    final List<String> dataList=new ArrayList<>();
+                                    for (Citybasic b:citySearch.getBasic()){
+                                        dataList.add(b.getLocation()+","+b.getParent_city()+","+b.getAdmin_area());
+                                    }
+                                    //展示结果列表
+                                    ArrayAdapter<String> adapter=new ArrayAdapter<>(context,
+                                            android.R.layout.simple_list_item_1,dataList);
+                                    listView.setAdapter(adapter);
+                                    //获取用户点击事件
+                                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                                        @Override
+                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                            String[] getC=dataList.get(position).split(",");
+                                            //获取城市
+                                            //先查询数据库是否存在该城市
+                                            //将该城市添加到用户城市列表
+                                            boolean f=ZqzbUtil.FBCity(context,getC[1]);
+                                            //关闭Activity
+                                            if (f){
+                                                ((Activity) context).finish();
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }else if ("SearchCityFBCity".equals(type)){
+                            CitySearch=SearchCity(responseText);
                         }
                     }
                 });
@@ -232,5 +278,7 @@ public class Utility {
             }
         });
     }
+
+
 
 }

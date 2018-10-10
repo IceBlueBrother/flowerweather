@@ -24,9 +24,9 @@ public class ZqzbUtil {
         Citybasic city=new Citybasic();
         City c=new City();
 
-            Utility.queryFromServer(context,AddressStatus.getCityAdd+getC+"&group=cn&number=1&mode=equal","SearchCity");
-            if (Utility.citySearch!=null&&!"".equals(Utility.citySearch)){
-                city=Utility.citySearch.getBasic().get(0);
+            Utility.queryFromServer(context,AddressStatus.getCityAdd+getC+"&group=cn&number=1&mode=equal","SearchCityFBCity");
+            if (Utility.CitySearch!=null&&!"".equals(Utility.CitySearch)){
+                city=Utility.CitySearch.getBasic().get(0);
                 if (getC.equals(city.getParent_city())&&city.getLocation().equals(city.getParent_city())){
 
                 }else {
@@ -63,5 +63,4 @@ public class ZqzbUtil {
 
         return true;
     }
-
 }
