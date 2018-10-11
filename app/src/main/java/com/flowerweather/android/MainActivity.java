@@ -25,15 +25,22 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.flowerweather.android.db.MyCity;
 import com.flowerweather.android.fragment.WeatherShowFragment;
 import com.flowerweather.android.status.AddressStatus;
 import com.flowerweather.android.util.Utility;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public LocationClient mLocationClient;
+
+    private List<MyCity> myCityList;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,13 +75,16 @@ public class MainActivity extends AppCompatActivity {
             requestLocation();
         }
 
+        //获取MyCity
+        myCityList= DataSupport.order("sfxz desc").find(MyCity.class);
+
         //初始化ViewPager及其适配器
         MyPagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager());
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
         //将ViewPager与适配器关联
         viewPager.setAdapter(adapter);
         //TabLayout
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout);
+        tabLayout = (TabLayout) findViewById(R.id.tablayout);
 
         //将ViewPager与TabLayout关联
         tabLayout.setupWithViewPager(viewPager);
@@ -169,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    static class MyPagerAdapter extends FragmentStatePagerAdapter {
+     class MyPagerAdapter extends FragmentStatePagerAdapter {
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -177,17 +187,27 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return WeatherShowFragment.newInstance(position,"城市");
+            return WeatherShowFragment.newInstance(position,myCityList.get(position).getCity());
         }
 
         @Override
         public int getCount() {
-            return 3;
+            return myCityList.size();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return "Tab " + position;
+            return myCityList.get(position).getCity();
         }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        myCityList.clear();
+        myCityList.addAll(DataSupport.order("sfxz desc").find(MyCity.class));
+        MyPagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(viewPager);
     }
 }
