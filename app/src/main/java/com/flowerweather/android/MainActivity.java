@@ -3,20 +3,29 @@ package com.flowerweather.android;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.flowerweather.android.fragment.WeatherShowFragment;
 import com.flowerweather.android.status.AddressStatus;
 import com.flowerweather.android.util.Utility;
 
@@ -59,9 +68,19 @@ public class MainActivity extends AppCompatActivity {
             requestLocation();
         }
 
-        TextView weatherContentText= (TextView) findViewById(R.id.weather_content_text);
-        String flowerContent=generateFlowerContent();
-        weatherContentText.setText(flowerContent);
+        //初始化ViewPager及其适配器
+        MyPagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager());
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        //将ViewPager与适配器关联
+        viewPager.setAdapter(adapter);
+        //TabLayout
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout);
+
+        //将ViewPager与TabLayout关联
+        tabLayout.setupWithViewPager(viewPager);
+
+        //设置指示器的颜色
+        tabLayout.setSelectedTabIndicatorColor(Color.GREEN);
 
 //        NavigationView navigationView= (NavigationView) findViewById(R.id.nav_view);
 //        //设置menu图标颜色为图标本身的颜色
@@ -147,6 +166,28 @@ public class MainActivity extends AppCompatActivity {
                 break;
             default:
                 break;
+        }
+    }
+
+    static class MyPagerAdapter extends FragmentStatePagerAdapter {
+
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return WeatherShowFragment.newInstance(position,"城市");
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return "Tab " + position;
         }
     }
 }
