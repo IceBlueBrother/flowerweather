@@ -19,8 +19,6 @@ public class City extends DataSupport{
     private String lon;
     //该地区／城市所在时区
     private String tz;
-    //最后更新天气的时间
-    private Date lastUpdate;
     //是否默认(1是/0否)
     private String Sfmr;
 
@@ -78,14 +76,6 @@ public class City extends DataSupport{
 
     public void setTz(String tz) {
         this.tz = tz;
-    }
-
-    public Date getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(Date lastUpdate) {
-        this.lastUpdate = lastUpdate;
     }
 
     public String getSfmr() {

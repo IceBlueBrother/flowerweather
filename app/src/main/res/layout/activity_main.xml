@@ -43,6 +43,9 @@
                 android:id="@+id/tablayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:tabIndicatorHeight="0dp"
+                app:tabTextColor="#66ffffff"
+                app:tabSelectedTextColor="#000000"
                 app:tabGravity="center"
                 app:tabMode="fixed" />
 

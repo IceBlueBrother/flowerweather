@@ -16,8 +16,8 @@ public class Now extends DataSupport{
     private String code;
     //温度
     private String temperature;
-    //城市主表Id
-    private int CityId;
+    //城市名
+    private String CityName;
 
     public String getLastUpdate() {
         return lastUpdate;
@@ -51,12 +51,12 @@ public class Now extends DataSupport{
         this.temperature = temperature;
     }
 
-    public int getCityId() {
-        return CityId;
+    public String getCityName() {
+        return CityName;
     }
 
-    public void setCityId(int cityId) {
-        CityId = cityId;
+    public void setCityName(String cityName) {
+        CityName = cityName;
     }
 
     public int getId() {
