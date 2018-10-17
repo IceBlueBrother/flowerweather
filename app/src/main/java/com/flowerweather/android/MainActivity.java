@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     private List<MyCity> myCityList;
     private ViewPager viewPager;
     private TabLayout tabLayout;
+
+    private SwipeRefreshLayout swipeRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +94,23 @@ public class MainActivity extends AppCompatActivity {
 
         //设置指示器的颜色
         tabLayout.setSelectedTabIndicatorColor(Color.GREEN);
+
+        //下拉刷新
+        swipeRefresh= (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+        //设置下拉进度条的颜色
+        swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
+        //设置下拉刷新监听器
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener(){
+            @Override
+            public void onRefresh() {
+                myCityList.clear();
+                myCityList.addAll(DataSupport.order("sfxz desc").find(MyCity.class));
+                MyPagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager());
+                viewPager.setAdapter(adapter);
+                tabLayout.setupWithViewPager(viewPager);
+                swipeRefresh.setRefreshing(false);
+            }
+        });
 
 //        NavigationView navigationView= (NavigationView) findViewById(R.id.nav_view);
 //        //设置menu图标颜色为图标本身的颜色
