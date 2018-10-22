@@ -18,7 +18,8 @@ public class Suggestion extends DataSupport{
     private String uv;
     //最后更新时间
     private String lastUpdate;
-    private int CityId;
+    //城市名
+    private String CityName;
 
     public String getCar_washing() {
         return car_washing;
@@ -84,11 +85,11 @@ public class Suggestion extends DataSupport{
         this.id = id;
     }
 
-    public int getCityId() {
-        return CityId;
+    public String getCityName() {
+        return CityName;
     }
 
-    public void setCityId(int cityId) {
-        CityId = cityId;
+    public void setCityName(String cityName) {
+        CityName = cityName;
     }
 }

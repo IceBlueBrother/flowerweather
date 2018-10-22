@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +15,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.flowerweather.android.R;
+import com.flowerweather.android.adapter.WeatherSuggestionAdapter;
 import com.flowerweather.android.db.Now;
+import com.flowerweather.android.db.Suggestion;
+import com.flowerweather.android.util.Entity;
 import com.flowerweather.android.util.getWeatherUtil;
 
 import org.litepal.crud.DataSupport;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -86,6 +92,58 @@ public class WeatherShowFragment extends Fragment{
             }
         }else {
             getWeatherUtil.getWeatherNow(getContext(),CityName,view);
+        }
+
+        //获取生活指数
+        List<Suggestion> list2=DataSupport.where("CityName=?",CityName).find(Suggestion.class);
+        if (list2!=null&&list2.size()>0){
+            Suggestion suggestion=list2.get(0);
+
+            try {
+                //判断最后更新时间
+                SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date newTime=new Date();
+                Date lastUpdate=format.parse(suggestion.getLastUpdate());
+                int minutes = (int) ((newTime.getTime() - lastUpdate.getTime())/(1000 * 60));
+                if (minutes>1440){
+                    getWeatherUtil.getWeatherSuggestion(getContext(),CityName,view);
+                }else {
+                    RecyclerView WeatherSuggestionRecyclerView= (RecyclerView) view.findViewById(R.id.Weather_suggestion);
+                    LinearLayoutManager layoutManager=new LinearLayoutManager(getContext());
+                    layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                    WeatherSuggestionRecyclerView.setLayoutManager(layoutManager);
+
+                    //拼凑数据List
+                    List<Entity> entityList=new ArrayList<>();
+                    entityList.add(new Entity("穿衣",suggestion.getDressing()));
+                    entityList.add(new Entity("紫外线强度",suggestion.getUv()));
+                    entityList.add(new Entity("洗车",suggestion.getCar_washing()));
+                    entityList.add(new Entity("旅游",suggestion.getTravel()));
+                    entityList.add(new Entity("感冒",suggestion.getFlu()));
+                    entityList.add(new Entity("运动",suggestion.getSport()));
+
+                    WeatherSuggestionAdapter adapter=new WeatherSuggestionAdapter(entityList);
+                    WeatherSuggestionRecyclerView.setAdapter(adapter);
+                }
+            } catch (ParseException e) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+                //设置内容
+                dialog.setMessage(e.getMessage());
+                //可否取消
+                dialog.setCancelable(false);
+                //设置确定按钮点击事件
+                dialog.setPositiveButton("确认", new DialogInterface.
+                        OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().finish();
+                    }
+                });
+                //显示对话框
+                dialog.show();
+            }
+        }else {
+            getWeatherUtil.getWeatherSuggestion(getContext(),CityName,view);
         }
 
         return view;

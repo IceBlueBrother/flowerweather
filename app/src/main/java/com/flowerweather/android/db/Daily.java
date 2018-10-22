@@ -10,7 +10,7 @@ public class Daily extends DataSupport{
     //最后更新时间
     private String lastUpdate;
     //城市主表Id
-    private int CityId;
+    private String CityName;
 
     public String getLastUpdate() {
         return lastUpdate;
@@ -20,12 +20,12 @@ public class Daily extends DataSupport{
         this.lastUpdate = lastUpdate;
     }
 
-    public int getCityId() {
-        return CityId;
+    public String getCityName() {
+        return CityName;
     }
 
-    public void setCityId(int cityId) {
-        CityId = cityId;
+    public void setCityName(String cityName) {
+        CityName = cityName;
     }
 
     public int getId() {
