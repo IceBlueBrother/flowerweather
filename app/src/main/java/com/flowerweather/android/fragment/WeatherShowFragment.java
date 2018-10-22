@@ -102,10 +102,9 @@ public class WeatherShowFragment extends Fragment{
             try {
                 //判断最后更新时间
                 SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date newTime=new Date();
-                Date lastUpdate=format.parse(suggestion.getLastUpdate());
-                int minutes = (int) ((newTime.getTime() - lastUpdate.getTime())/(1000 * 60));
-                if (minutes>1440){
+                Date today=new Date();
+                String newTime=format.format(today);
+                if (!newTime.substring(0,11).equals(suggestion.getLastUpdate().substring(0,11))){
                     getWeatherUtil.getWeatherSuggestion(getContext(),CityName,view);
                 }else {
                     RecyclerView WeatherSuggestionRecyclerView= (RecyclerView) view.findViewById(R.id.Weather_suggestion);
@@ -125,7 +124,7 @@ public class WeatherShowFragment extends Fragment{
                     WeatherSuggestionAdapter adapter=new WeatherSuggestionAdapter(entityList);
                     WeatherSuggestionRecyclerView.setAdapter(adapter);
                 }
-            } catch (ParseException e) {
+            } catch (Exception e) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
                 //设置内容
                 dialog.setMessage(e.getMessage());
