@@ -143,7 +143,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
             Utility.queryMyCityNow(MainActivity.this, AddressStatus.getCityAdd+bdLocation.getLongitude()+","
-                    +bdLocation.getLatitude()+"&group=cn&number=1");
+                    +bdLocation.getLatitude()+"&group=cn&number=1",myCityList,viewPager,tabLayout,
+                    new MainActivity.MyPagerAdapter(getSupportFragmentManager()));
         }
     }
 
@@ -199,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-     class MyPagerAdapter extends FragmentStatePagerAdapter {
+     public class MyPagerAdapter extends FragmentStatePagerAdapter {
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);

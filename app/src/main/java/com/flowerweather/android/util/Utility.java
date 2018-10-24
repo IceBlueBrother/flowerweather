@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.flowerweather.android.MainActivity;
 import com.flowerweather.android.R;
 import com.flowerweather.android.db.City;
 import com.flowerweather.android.db.MyCity;
@@ -45,10 +48,9 @@ public class Utility {
     public static void queryFromServer(final Context context, final String address, final String type
                                         ,final String getC){
         HttpUtil.sendOkHttpRequest(address, new Callback() {
-            private static final String TAG = "Utility";
             @Override
             public void onFailure(Call call, final IOException e) {
-                Log.d(TAG, "onFailure: "+address);
+
                 ((Activity)context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -73,14 +75,10 @@ public class Utility {
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 final String responseText= response.body().string();
-                Log.d(TAG, "onResponse:"+address);
-                Log.d(TAG, "onResponse: "+responseText);
                 ((Activity)context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d(TAG, "run: ...");
                         if ("SearchCity".equals(type)){
-                            Log.d(TAG, "run: "+SearchCity(responseText));
                             CitySearch citySearch2 = SearchCity(responseText);
                             if (citySearch2!=null&&!"".equals(citySearch2)){
                                 //访问查询，获取结果列表
@@ -174,13 +172,10 @@ public class Utility {
             JSONObject jsonObject=new JSONObject(response);
             JSONArray jsonArray=jsonObject.getJSONArray("HeWeather6");
             String cityContent=jsonArray.getJSONObject(0).toString();
-            Log.d("CitySearch", "SearchCity: "+cityContent);
             return new Gson().fromJson(cityContent,CitySearch.class);
         } catch (JSONException e) {
-            Log.d("CitySearch", "SearchCity: "+e.getMessage());
             e.printStackTrace();
         }
-        Log.d("CitySearch", "SearchCity: null");
         return null;
     }
 
@@ -190,12 +185,11 @@ public class Utility {
      * @param address
      * @return
      */
-    public static void queryMyCityNow(final Context context,final String address){
+    public static void queryMyCityNow(final Context context, final String address, final List<MyCity> myCityList,
+                                      final ViewPager viewPager, final TabLayout tabLayout, final MainActivity.MyPagerAdapter adapter){
         HttpUtil.sendOkHttpRequest(address, new Callback() {
-            private static final String TAG = "Utility";
             @Override
             public void onFailure(Call call, final IOException e) {
-                Log.d(TAG, "onFailure: "+address);
                 ((Activity)context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -220,13 +214,9 @@ public class Utility {
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
                 final String responseText= response.body().string();
-                Log.d(TAG, "onResponse:"+address);
-                Log.d(TAG, "onResponse: "+responseText);
                 ((Activity)context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d(TAG, "run: ...");
-                        Log.d(TAG, "run: "+SearchCity(responseText));
                         CitySearch citySearch2 = SearchCity(responseText);
                         if ("ok".equals(citySearch2.getStatus())){
                             Citybasic citybasic=citySearch2.getBasic().get(0);
@@ -305,6 +295,10 @@ public class Utility {
                                 myCity.setSfxz("1");
                                 myCity.save();
                             }
+                            myCityList.clear();
+                            myCityList.addAll(DataSupport.order("sfxz desc").find(MyCity.class));
+                            viewPager.setAdapter(adapter);
+                            tabLayout.setupWithViewPager(viewPager);
                         }else{
                             ((Activity) context).finish();
                         }

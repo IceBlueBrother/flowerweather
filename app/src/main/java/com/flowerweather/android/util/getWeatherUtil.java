@@ -48,11 +48,9 @@ public class getWeatherUtil {
      */
     public static void getWeatherNow(final Context context, final String CityName, final View view){
         HttpUtil.sendOkHttpRequest(AddressStatus.getWeatherNow+CityName, new Callback() {
-            private static final String TAG = "Utility";
 
             @Override
             public void onFailure(Call call, final IOException e) {
-                Log.d(TAG, "onFailure: " + CityName);
                 ((Activity) context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -77,12 +75,9 @@ public class getWeatherUtil {
             @Override
             public void onResponse(final Call call, final Response response) throws IOException {
                 final String responseText = response.body().string();
-                Log.d(TAG, "onResponse:" + CityName);
-                Log.d(TAG, "onResponse: " + responseText);
                 ((Activity) context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d(TAG, "run: ...");
                         //获得结果
                         Nowresults nowresults = getNowresults(responseText);
                         //没有得到内容
@@ -153,13 +148,10 @@ public class getWeatherUtil {
             JSONObject jsonObject=new JSONObject(response);
             JSONArray jsonArray=jsonObject.getJSONArray("results");
             String Content=jsonArray.getJSONObject(0).toString();
-            Log.d("CitySearch", "SearchCity: "+Content);
             return new Gson().fromJson(Content,Nowresults.class);
         } catch (JSONException e) {
-            Log.d("CitySearch", "SearchCity: "+e.getMessage());
             e.printStackTrace();
         }
-        Log.d("CitySearch", "SearchCity: null");
         return null;
     }
 
@@ -171,11 +163,9 @@ public class getWeatherUtil {
      */
     public static void getWeatherSuggestion(final Context context, final String CityName, final View view){
         HttpUtil.sendOkHttpRequest(AddressStatus.getSuggestion+CityName, new Callback() {
-            private static final String TAG = "getWeatherSuggestion";
 
             @Override
             public void onFailure(Call call, final IOException e) {
-                Log.d(TAG, "onFailure: " + CityName);
                 ((Activity) context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -200,20 +190,14 @@ public class getWeatherUtil {
             @Override
             public void onResponse(final Call call, final Response response) throws IOException {
                 final String responseText = response.body().string();
-                Log.d(TAG, "onResponse:" + CityName);
-                Log.d(TAG, "onResponse: " + responseText);
                 ((Activity) context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d(TAG, "run: ...");
                         //获得结果
                         try {
                             JSONObject suggestionresultsJb = new JSONObject(responseText);
-                            Log.d(TAG, "JsonObject: " + suggestionresultsJb);
                             JSONArray jsonArray=suggestionresultsJb.getJSONArray("results");
-                            Log.d(TAG, "results: " + jsonArray);
                             JSONObject suggestionresults=jsonArray.getJSONObject(0).getJSONObject("suggestion");
-                            Log.d(TAG, "Suggestion: " + suggestionresults);
 
                             //没有得到内容
                             if (suggestionresults==null){
@@ -233,10 +217,8 @@ public class getWeatherUtil {
                                 //显示对话框
                                 dialog.show();
                             }else{
-                                Log.d(TAG, "Notnull: " + suggestionresultsJb);
                                 //有内容
                                 String updateTimeT= jsonArray.getJSONObject(0).getString("last_update");
-                                Log.d(TAG, "updateTimeT: " + suggestionresultsJb);
                                 String updateTime=updateTimeT.substring(0,10)+" "+updateTimeT.substring(11,19);
                                 //将数据存入数据库
                                 List<Suggestion> l=DataSupport.where("CityName=?",CityName).find(Suggestion.class);
@@ -266,7 +248,6 @@ public class getWeatherUtil {
                                     suggestion.save();
                                 }
 
-                                Log.d(TAG, "getSuggestionOver: " + suggestionresultsJb);
 
                                 //展示信息
                                 RecyclerView WeatherSuggestionRecyclerView= (RecyclerView) view.findViewById(R.id.Weather_suggestion);
@@ -282,10 +263,6 @@ public class getWeatherUtil {
                                 entityList.add(new Entity("旅游",suggestion.getTravel()));
                                 entityList.add(new Entity("感冒",suggestion.getFlu()));
                                 entityList.add(new Entity("运动",suggestion.getSport()));
-
-                                for (int i=0;i<entityList.size();i++){
-                                    Log.d(TAG, "SugIn: " + entityList.get(i).getKey()+"-"+entityList.get(i).getValue());
-                                }
 
                                 WeatherSuggestionAdapter adapter=new WeatherSuggestionAdapter(entityList);
                                 WeatherSuggestionRecyclerView.setAdapter(adapter);
@@ -307,11 +284,9 @@ public class getWeatherUtil {
      */
     public static void getWeatherDaily(final Context context, final String CityName, final View view){
         HttpUtil.sendOkHttpRequest(AddressStatus.getDaily+CityName, new Callback() {
-            private static final String TAG = "getWeatherDaily";
 
             @Override
             public void onFailure(Call call, final IOException e) {
-                Log.d(TAG, "onFailure: " + CityName);
                 ((Activity) context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -336,12 +311,9 @@ public class getWeatherUtil {
             @Override
             public void onResponse(final Call call, final Response response) throws IOException {
                 final String responseText = response.body().string();
-                Log.d(TAG, "onResponse:" + CityName);
-                Log.d(TAG, "onResponse: " + responseText);
                 ((Activity) context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d(TAG, "run: ...");
                         //获得结果
                         Dailyresults dailyresults = getDailyresults(responseText);
                         //没有得到内容
@@ -430,13 +402,10 @@ public class getWeatherUtil {
             JSONObject jsonObject=new JSONObject(response);
             JSONArray jsonArray=jsonObject.getJSONArray("results");
             String Content=jsonArray.getJSONObject(0).toString();
-            Log.d("CitySearch", "SearchCity: "+Content);
             return new Gson().fromJson(Content,Dailyresults.class);
         } catch (JSONException e) {
-            Log.d("CitySearch", "SearchCity: "+e.getMessage());
             e.printStackTrace();
         }
-        Log.d("CitySearch", "SearchCity: null");
         return null;
     }
 

@@ -2,7 +2,7 @@
 
     <dbname value="flower_weather"/>
 
-    <version value="6"/>
+    <version value="7"/>
 
     <list>
         <mapping class="com.flowerweather.android.db.City"/>
