@@ -1,9 +1,7 @@
-package com.flowerweather.android.db;
+package com.flowerweather.android.gson.gsonin;
 
-import org.litepal.crud.DataSupport;
+public class Ddaily {
 
-public class Day extends DataSupport{
-    private int id;
     private String date;
     private String text_day;
     private String code_day;
@@ -11,11 +9,11 @@ public class Day extends DataSupport{
     private String code_night;
     private String high;
     private String low;
+    private String precip;
     private String wind_direction;
     private String wind_direction_degree;
     private String wind_speed;
     private String wind_scale;
-    private int DailyId;
 
     public String getDate() {
         return date;
@@ -73,6 +71,14 @@ public class Day extends DataSupport{
         this.low = low;
     }
 
+    public String getPrecip() {
+        return precip;
+    }
+
+    public void setPrecip(String precip) {
+        this.precip = precip;
+    }
+
     public String getWind_direction() {
         return wind_direction;
     }
@@ -103,21 +109,5 @@ public class Day extends DataSupport{
 
     public void setWind_scale(String wind_scale) {
         this.wind_scale = wind_scale;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getDailyId() {
-        return DailyId;
-    }
-
-    public void setDailyId(int dailyId) {
-        DailyId = dailyId;
     }
 }

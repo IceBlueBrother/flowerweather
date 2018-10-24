@@ -15,7 +15,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.flowerweather.android.R;
+import com.flowerweather.android.adapter.WeatherDailyAdapter;
 import com.flowerweather.android.adapter.WeatherSuggestionAdapter;
+import com.flowerweather.android.db.Daily;
+import com.flowerweather.android.db.Day;
 import com.flowerweather.android.db.Now;
 import com.flowerweather.android.db.Suggestion;
 import com.flowerweather.android.util.Entity;
@@ -103,8 +106,9 @@ public class WeatherShowFragment extends Fragment{
                 //判断最后更新时间
                 SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date today=new Date();
-                String newTime=format.format(today);
-                if (!newTime.substring(0,11).equals(suggestion.getLastUpdate().substring(0,11))){
+                String newTime=format.format(today).substring(0,11).trim();
+                String lastTime=suggestion.getLastUpdate().substring(0,11).trim();
+                if (!newTime.equals(lastTime)){
                     getWeatherUtil.getWeatherSuggestion(getContext(),CityName,view);
                 }else {
                     RecyclerView WeatherSuggestionRecyclerView= (RecyclerView) view.findViewById(R.id.Weather_suggestion);
@@ -143,6 +147,56 @@ public class WeatherShowFragment extends Fragment{
             }
         }else {
             getWeatherUtil.getWeatherSuggestion(getContext(),CityName,view);
+        }
+
+        //获取逐日天气
+        List<Daily> list3=DataSupport.where("CityName=?",CityName).find(Daily.class);
+        if (list3!=null&&list3.size()>0){
+            Daily daily=list3.get(0);
+
+            try {
+                //判断最后更新时间
+                SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date today=new Date();
+                String newTime=format.format(today).substring(0,11).trim();
+                String lastTime=daily.getLastUpdate().substring(0,11).trim();
+                if (!newTime.equals(lastTime)){
+                    getWeatherUtil.getWeatherDaily(getContext(),CityName,view);
+                }else {
+                    //没有过期，则放入内容
+                    //判断有没有内容
+                    List<Day> days=DataSupport.where("DailyId=?",String.valueOf(daily.getId())).find(Day.class);
+                    if (days!=null&&days.size()>=3){
+                        RecyclerView WeatherDailyRecyclerView= (RecyclerView) view.findViewById(R.id.Weather_daily);
+                        LinearLayoutManager layoutManager=new LinearLayoutManager(getContext());
+                        WeatherDailyRecyclerView.setLayoutManager(layoutManager);
+
+                        WeatherDailyAdapter adapter=new WeatherDailyAdapter(days);
+                        WeatherDailyRecyclerView.setAdapter(adapter);
+                    }else {
+                        getWeatherUtil.getWeatherDaily(getContext(),CityName,view);
+                    }
+
+                }
+            } catch (Exception e) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+                //设置内容
+                dialog.setMessage(e.getMessage());
+                //可否取消
+                dialog.setCancelable(false);
+                //设置确定按钮点击事件
+                dialog.setPositiveButton("确认", new DialogInterface.
+                        OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getActivity().finish();
+                    }
+                });
+                //显示对话框
+                dialog.show();
+            }
+        }else {
+            getWeatherUtil.getWeatherDaily(getContext(),CityName,view);
         }
 
         return view;
