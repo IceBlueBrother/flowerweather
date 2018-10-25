@@ -6,7 +6,11 @@
     <TextView
         android:id="@+id/WDdate"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:gravity="center"
+        android:background="#66ffffff"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,82 +21,122 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
-            
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:background="#66ffffff"
+                android:layout_margin="10dp">
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:textSize="25sp"
+                    android:gravity="center"
+                    android:textColor="#000000"
                     android:text="昼"/>
 
                 <TextView
                     android:id="@+id/text_day"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+                    android:gravity="center"
+                    android:textSize="35sp"
+                    android:textColor="#000000"/>
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_margin="10dp"
+                android:background="#66000000">
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:textSize="25sp"
+                    android:gravity="center"
+                    android:textColor="#ffffff"
                     android:text="夜"/>
 
                 <TextView
                     android:id="@+id/text_night"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+                    android:gravity="center"
+                    android:textSize="35sp"
+                    android:textColor="#ffffff"/>
 
             </LinearLayout>
-            
+
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/tempe"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textSize="35sp"
+                android:gravity="center"
+                android:textColor="#000000"/>
 
         </LinearLayout>
-        
+
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp">
 
             <TextView
                 android:id="@+id/wind_direction"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/wind_direction_degree"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/wind_speed"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/wind_scale"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:textSize="20sp"/>
             
         </LinearLayout>
 

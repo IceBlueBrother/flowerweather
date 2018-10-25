@@ -59,10 +59,10 @@ public class WeatherDailyAdapter extends RecyclerView.Adapter<WeatherDailyAdapte
         holder.TextDay.setText(day.getText_day());
         holder.TextNight.setText(day.getText_night());
         holder.tempe.setText(day.getHigh()+"/"+day.getLow()+"℃");
-        holder.windDirection.setText(day.getWind_direction());
-        holder.windDirectionDegree.setText(day.getWind_direction_degree());
-        holder.windSpeed.setText(day.getWind_speed());
-        holder.windScale.setText(day.getWind_scale());
+        holder.windDirection.setText("风向："+day.getWind_direction());
+        holder.windDirectionDegree.setText("风向角度："+day.getWind_direction_degree());
+        holder.windSpeed.setText("风速："+day.getWind_speed());
+        holder.windScale.setText("风力等级："+day.getWind_scale());
     }
 
     @Override
